@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" http-equiv='X-UA-Compatible' content='IE=edge' />
+        <title>D3 Test</title>
+        <script type="text/javascript" src="static/lib/d3/d3.js"></script>
+        <!-- <script type="text/javascript" src="input/coords_pedro.js"></script> -->
+        <script type="text/javascript" src="static/js/movements_football_d3.js"></script>
+
+        <link href="static/lib/bootstrap.min.css" rel="stylesheet">
+        <link href="static/css/movements_football_d3.css" rel="stylesheet">
+
+
+    </head>
+    <body>
+        <div id="main-container" class="container">
+
+            <h2>Tracking my movements on the pitch with Fitbit</h2>
+
+            <label for="speed_select" class="text-muted">Speed</label>
+            <select id="speed_select" name="speed" onchange="update_speed(this.value)">
+                <option value="100" selected="selected">Fast</option>
+                <option value="1000">Normal</option>
+                <option value="10">Faster</option>
+            </select></br>
+
+            <button class="btn btn-blue">Play</button></br>
+
+            <!-- <h4 id="time-div"></h4> -->
+
+            <script type="text/javascript">
+                function update_speed(speed_selected) { 
+                    speed = speed_selected;
+                }
+            </script>
+
+
+        </div>
+    </body>
+</html>
