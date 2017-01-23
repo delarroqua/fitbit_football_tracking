@@ -125,7 +125,7 @@ d3.csv("input/coords_pedro.csv", function(coords_pedro) {
         function transition_time(i_time) {
             time_p.transition()
             .duration(speed)
-            .text(function(d){ 
+            .text(function(d) { 
                 return points[i_time][0] 
             })
             //.on("end", transition_time);
