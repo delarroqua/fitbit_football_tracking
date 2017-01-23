@@ -1,1 +1,1 @@
-<?php header( 'Location: /movements_football_d3.html.html' ) ;  ?>
+<?php header( 'Location: /movements_football_d3.html' ) ;  ?>
