@@ -3,14 +3,16 @@
  function initMap() {
    map = new google.maps.Map(document.getElementById('map'), {
      zoom: 19,
-     center: {lat: 48.831485, lng: 2.272656},
+     //center: {lat: 48.831485, lng: 2.272656},
+     center: {lat: 48.874586, lng: 2.277218},
      mapTypeId: 'satellite'
    });
 
    heatmap = new google.maps.visualization.HeatmapLayer({
      data: getPoints(),
      map: map,
-     radius: 15
+     radius: 11
+     //opacity: 2
    });
 
  }
