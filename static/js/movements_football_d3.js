@@ -1,19 +1,41 @@
-// Todo: select speed (slow, normal, fast)
-// Todo: refactor code and clean it (tcx data to js file & movements_football_d3)
-
 //Width and height
-var w = 1050;
-var h = 680;
-var padding = 20;
-var speed = 100;
+var w = 1150;
+var h = 720;
+var padding = 40;
+var speed = 300;
+
+// Real coordinates stadium lenglen
+/*var top_left = [48.831832, 2.272053],
+    top_right = [48.831997, 2.272831],
+    bottom_left = [48.830974, 2.272471],
+    bottom_right = [48.831140, 2.273253];*/
+
+
+// Real coordinates stadium Wimille
+var top_left = [48.875114, 2.277239],
+    top_right = [48.874824, 2.277940],
+    bottom_left = [48.874339, 2.276526],
+    bottom_right = [48.874057, 2.277226];
+
+
+var xMin = Math.min(top_left[0], top_right[0], bottom_left[0], bottom_right[0]);
+var xMax = Math.max(top_left[0], top_right[0], bottom_left[0], bottom_right[0]);
+var yMin = Math.min(top_left[1], top_right[1], bottom_left[1], bottom_right[1]);
+var yMax = Math.max(top_left[1], top_right[1], bottom_left[1], bottom_right[1]);
+
+
+
 
 // var points = d3.values(JSON.parse(coords_pedro));  
-d3.csv("input/coords_pedro.csv", function(coords_pedro) {
-    var points = coords_pedro.map(function(obj) {
+d3.csv("input/coords_pedro_def.csv", function(coords_pedro) {
+    var points_raw = coords_pedro.map(function(obj) {
       return Object.keys(obj).map(function(key) { 
         return obj[key];
         });
     });
+
+    //points = points_raw.slice(1000, 6800);
+    points = points_raw.slice(3900, 6720);
 
     var pauseValues = {
       lastTime: 0,
@@ -22,23 +44,25 @@ d3.csv("input/coords_pedro.csv", function(coords_pedro) {
 
     var i_time = 0;
 
+
     // Create x & y - max & min
-    var xMin = d3.min(points, function(d) { return d[1]; })
-    var xMax = d3.max(points, function(d) { return d[1]; })
-    var yMin = d3.min(points, function(d) { return d[2]; })
-    var yMax = d3.max(points, function(d) { return d[2]; })
+    /* var xMin = d3.min(points, function(d) { return d[1]; })
+    var xMax = d3.max(points, function(d) { return d[1]; }) 
+    var yMin = d3.min(points, function(d) { return d[2]; }) 
+    var yMax = d3.max(points, function(d) { return d[2]; }) */
+
+    var hrMin = d3.min(points, function(d) { return Number(d[3]); })
+    var hrMax = d3.max(points, function(d) { return Number(d[3]); })
 
     //Create scale functions
     var xScale = d3.scaleLinear()
                     .domain([xMin, xMax])
-                    .range([padding, w - (padding * 2)]);
+                    .range([padding, w + padding]);
 
     var yScale = d3.scaleLinear()
-                    .domain([yMin, yMax])
-                    .range([h - padding, padding]);
+                    .domain([yMax, yMin])
+                    .range([h + (padding * 2), 0]);
 
-    var hrMin = d3.min(points, function(d) { return Number(d[3]); })
-    var hrMax = d3.max(points, function(d) { return Number(d[3]); })
 
     var hrScale = d3.scaleLinear()
                     .domain([hrMin, hrMax])
@@ -48,9 +72,29 @@ d3.csv("input/coords_pedro.csv", function(coords_pedro) {
     var pointsScaled = [];
 
     for (var i = 0; i < points.length; i++) {
-        pointsScaled[i] = [Number(xScale(points[i][1])), 
+        pointsScaled[i] = [points[i][0], Number(xScale(points[i][1])), 
         Number(yScale(points[i][2])), Number(hrScale(points[i][3]))];
     }
+
+
+    function rotate(cx, cy, x, y, angle) {
+        var radians = (Math.PI / 180) * angle,
+            cos = Math.cos(radians),
+            sin = Math.sin(radians),
+            nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+            ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+        return [nx, ny];
+    }
+
+    var pointsScaled_rotated = [];
+
+    for (var i = 0; i < pointsScaled.length; i++) {
+        var cx = 575,
+            cy = 360,
+            angle = 20;
+        pointsScaled_rotated[i] = rotate(cx, cy, pointsScaled[i][1], pointsScaled[i][2], angle);
+    }
+
 
 
     function make_RGB(hr_scaled) {
@@ -72,9 +116,9 @@ d3.csv("input/coords_pedro.csv", function(coords_pedro) {
         // Initiatiate circle at the first point
         var circle = svg.append("circle")
             .attr("r", 13)
-            .attr('cx', pointsScaled[0][0])
-            .attr('cy', pointsScaled[0][1])
-            .attr('fill', make_RGB(pointsScaled[0][2]))
+            .attr('cx', pointsScaled_rotated[0][0])
+            .attr('cy', pointsScaled_rotated[0][1])
+            .attr('fill', make_RGB(pointsScaled[0][3]))
 
         d3.select("button").on("click",function(d, i){
           var button = d3.select(this);
@@ -98,7 +142,7 @@ d3.csv("input/coords_pedro.csv", function(coords_pedro) {
                 .duration(speed)
                 .attr('cx', cx_circle(i_time))
                 .attr('cy', cy_circle(i_time))
-                .attr('fill', make_RGB(pointsScaled[i_time][2]))
+                .attr('fill', make_RGB(pointsScaled[i_time][3]))
                 .on("end", function() {
                         pauseValues = {
                           lastTime: 0,
@@ -115,24 +159,31 @@ d3.csv("input/coords_pedro.csv", function(coords_pedro) {
         }
 
         function cx_circle(i_time) { 
-            return pointsScaled[i_time][0] 
+            return pointsScaled_rotated[i_time][0]
         }
 
         function cy_circle(i_time) { 
-            return pointsScaled[i_time][1] 
+            return pointsScaled_rotated[i_time][1]
         }
 
         function transition_time(i_time) {
             time_p.transition()
             .duration(speed)
             .text(function(d) { 
-                return points[i_time][0] 
+                return pointsScaled[i_time][0] 
             })
             //.on("end", transition_time);
         }
 
         var time_p = d3.select("#time-div");
-        time_p.text(points[0][0]);
+        time_p.text(pointsScaled[0][0]);
+
+        // svg.selectAll("point")
+        //    .data(pointsScaled_rotated)
+        //    .enter()
+        //    .append("circle")
+        //    .attr("r", 3)
+        //    .attr("transform", function(d) { return "translate(" + d.slice(0, 2) + ")"; });
 
     });
 
