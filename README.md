@@ -1,6 +1,6 @@
 # Fitbit - Football tracking
 
-Export your personnal fitbit tcx data and play with it !
+Export your personnal [Fitbit](https://www.fitbit.com/) [.TCX](https://en.wikipedia.org/wiki/Training_Center_XML) data and play with it !
 
 You can find an article about this projet on [this link](https://medium.com/@pierredelarroqua/tracking-my-movements-on-the-football-pitch-with-fitbit-872726e99809#.kktyg5awg)
 
