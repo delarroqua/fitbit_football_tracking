@@ -13,10 +13,15 @@
 
   <body>
     
-    <div id="map"></div> 
+    <div id="map"></div>
+    <div id="floating-panel">
+      <button onclick="changeRadius()">Change radius</button>
+      <button onclick="changeOpacity()">Change opacity</button>
+    </div>
 
     <script charset="utf-8">
       var coords_pedro = {{ coords_pedro|safe }};
+      var center_map = {{ center_map|safe }};
     </script>
 
   </body>

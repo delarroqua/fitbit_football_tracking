@@ -3,12 +3,14 @@
 #map {
   height: 700px;
 }
+
 /* Optional: Makes the sample page fill the window. */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
+
 #floating-panel {
   position: absolute;
   top: 10px;
@@ -22,6 +24,7 @@ html, body {
   line-height: 30px;
   padding-left: 10px;
 }
+
 #floating-panel {
   background-color: #fff;
   border: 1px solid #999;
