@@ -27,8 +27,8 @@
 
  function getPoints() {
    var coords_array = [];
-   for (i = 0; i < coords_pedro.length; i++) {
-        coords_array[i] = new google.maps.LatLng(coords_pedro[i][0], coords_pedro[i][1]);
+   for (i = 0; i < coords.length; i++) {
+        coords_array[i] = new google.maps.LatLng(coords[i][0], coords[i][1]);
    }
  return coords_array;
  }
