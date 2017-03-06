@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
     <head>
         <title>Fitbit Football Tracking</title>
+        <link href="static/lib/bootstrap.min.css" rel="stylesheet">
     </head>
 
     <body>
-        <h1>Fitbit Football Tracking</h1>
-        <form method="post" enctype="multipart/form-data" action="/upload">
-          <p><input type="file" name="file">
-             <input type="submit" value="Envoyer fichier">
-        </form>
+        <div class="container">
+            <h1>Fitbit Football Tracking</h1><br>
+            <form method="post" enctype="multipart/form-data" action="/upload">
+                <input type="file" name="file"><br>
+                <input type="submit" value="Envoyer fichier" class="btn btn-success">
+            </form>
+        </div>
     </body>
 
 </html>
