@@ -1,5 +1,6 @@
 from lxml import objectify
 import pandas as pd
+from datetime import datetime
 
 
 class TcxParser:
@@ -31,10 +32,15 @@ class TcxParser:
         return df_coords
 
 
-def tcx_to_df(tcx_file):
+def tcx_to_df(tcx_file_path):
     namespace = 'http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2'
-    tree = objectify.parse(tcx_file)
+    tree = objectify.parse(tcx_file_path)
     root = tree.getroot()
     tcx_parser = TcxParser(root, namespace)
     df_coords = tcx_parser.create_df_coords()
     return df_coords
+
+
+def get_datetime_string():
+    datetime_now_string = datetime.now().strftime("%Y%m%d_%H%M%S")
+    return datetime_now_string

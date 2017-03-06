@@ -3,12 +3,14 @@
 import os
 import json
 import tinys3
-from utils.io import load_json
+import boto3
+
 from flask import Flask, render_template, request
 from flask import flash, redirect, url_for
 from werkzeug.utils import secure_filename
 
-from utils.heatmap_utils import tcx_to_df
+from utils.io import load_json
+from utils.heatmap_utils import tcx_to_df, get_datetime_string
 
 UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'tcx'])
@@ -18,7 +20,7 @@ app.secret_key = "super secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Todo: Improve buttons to regulate opacity and radius
-# Todo: Store and retrieve file in S3 with nametxcfile_datetime format
+# Todo: Deploy on Heroku
 
 # Google Map Api
 config_google = load_json('config/config_google.json')
@@ -28,7 +30,8 @@ google_api_key = config_google['google_api_key']
 config_aws = load_json('config/config_aws.json')
 AWS_ACCESS_KEY_ID = config_aws['access_key_id']
 AWS_SECRET_ACCESS_KEY = config_aws['secret_access_key']
-s3_conn = tinys3.Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+s3_conn = tinys3.Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, default_bucket='pedro62360')
+s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
 
 def allowed_file(filename):
@@ -46,7 +49,10 @@ def build_heatmap(coords, coords_center):
 def uploaded_file():
     filename = request.args['filename']
     # Create heatmap
+    # tcx_from_s3 = s3_conn.get(os.path.join('tcx_files/', filename))
     tcx_file_path = os.path.join('uploads/', filename)
+    s3_client.download_file('pedro62360', os.path.join('tcx_files/', filename), tcx_file_path)
+    print(tcx_file_path)
     df_coords = tcx_to_df(tcx_file_path)
     coords = df_coords[['latitude', 'longitude']].values.tolist()
     coords_median = df_coords.mean(axis=0)
@@ -67,9 +73,11 @@ def upload_file():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            s3_conn.upload(os.path.join('tcx_files/', filename), file, 'pedro62360')  # Upload file to S3
-            return redirect(url_for('uploaded_file', filename=filename))
+            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            filename_with_date = get_datetime_string() + '_' + filename
+            s3_conn.upload(os.path.join('tcx_files/', filename_with_date), file)  # Upload file to S3
+            # s3_client.upload_fileobj(file, "pedro62360", os.path.join('tcx_files/', filename))
+            return redirect(url_for('uploaded_file', filename=filename_with_date))
     return render_template('index.html')
 
 
