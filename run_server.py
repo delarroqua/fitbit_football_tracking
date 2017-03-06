@@ -10,10 +10,9 @@ from flask import flash, redirect, url_for
 from werkzeug.utils import secure_filename
 
 from utils.io import load_json
-from utils.heatmap_utils import tcx_to_df, get_datetime_string
+from utils.heatmap_utils import tcx_to_df, get_datetime_string, allowed_file
 
 UPLOAD_FOLDER = 'uploads/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'tcx'])
 
 app = Flask(__name__)
 app.secret_key = "super secret key"
@@ -34,11 +33,6 @@ s3_conn = tinys3.Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, default_bu
 s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 def build_heatmap(coords, coords_center):
     center_map = {"lat": coords_center['latitude'], "lng": coords_center['longitude']}
     return render_template('heat_map_google.html', coords=json.dumps(coords), center_map=center_map,
@@ -48,11 +42,9 @@ def build_heatmap(coords, coords_center):
 @app.route('/heatmap')
 def uploaded_file():
     filename = request.args['filename']
-    # Create heatmap
     # tcx_from_s3 = s3_conn.get(os.path.join('tcx_files/', filename))
     tcx_file_path = os.path.join('uploads/', filename)
     s3_client.download_file('pedro62360', os.path.join('tcx_files/', filename), tcx_file_path)
-    print(tcx_file_path)
     df_coords = tcx_to_df(tcx_file_path)
     coords = df_coords[['latitude', 'longitude']].values.tolist()
     coords_median = df_coords.mean(axis=0)
