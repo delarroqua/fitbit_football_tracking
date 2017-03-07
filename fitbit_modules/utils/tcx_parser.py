@@ -1,8 +1,6 @@
 from lxml import objectify
 import pandas as pd
-from datetime import datetime
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'tcx'])
 
 class TcxParser:
     def __init__(self, root, namespace):
@@ -40,13 +38,3 @@ def tcx_to_df(tcx_file_path):
     tcx_parser = TcxParser(root, namespace)
     df_coords = tcx_parser.create_df_coords()
     return df_coords
-
-
-def get_datetime_string():
-    datetime_now_string = datetime.now().strftime("%Y%m%d_%H%M%S")
-    return datetime_now_string
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
