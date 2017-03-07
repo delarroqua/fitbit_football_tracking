@@ -29,6 +29,8 @@ AWS_SECRET_ACCESS_KEY = config_aws['secret_access_key']
 s3_conn = tinys3.Connection(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, default_bucket='pedro62360')
 s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
+# UPLOAD_FOLDER = 'uploads/'
+
 
 def build_heatmap(coords, coords_center):
     center_map = {"lat": coords_center['latitude'], "lng": coords_center['longitude']}
@@ -62,7 +64,7 @@ def upload_file():
             return redirect(request.url)
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # file.save(os.path.join(UPLOAD_FOLDER, filename))
             filename_with_date = get_datetime_string() + '_' + filename
             s3_conn.upload(os.path.join('tcx_files/', filename_with_date), file)  # Upload file to S3
             # s3_client.upload_fileobj(file, "pedro62360", os.path.join('tcx_files/', filename))
