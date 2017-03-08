@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import pandas as pd
 import os
 import json
 import tinys3
@@ -36,6 +37,13 @@ def build_heatmap(coords, coords_center):
     center_map = {"lat": coords_center['latitude'], "lng": coords_center['longitude']}
     return render_template('heat_map_google.html', coords=json.dumps(coords), center_map=center_map,
                            api_key=google_api_key)
+
+
+@app.route('/movements')
+def redirect_to_d3():
+    df_coords = pd.read_csv('input/coords_pedro_def.csv')
+    coords = df_coords.values.tolist()
+    return render_template('movements_football_d3.html', coords=json.dumps(coords))
 
 
 @app.route('/heatmap')
