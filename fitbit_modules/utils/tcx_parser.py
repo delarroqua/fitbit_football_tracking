@@ -26,8 +26,8 @@ class TcxParser:
     def create_df_coords(self):
         # Zip in a list and create a df
         list_coords = list(zip(self.time_values(), self.latitude_values(),
-                               self.longitude_values(), self.heart_rate_values()))
-        df_coords = pd.DataFrame(list_coords, columns=['time', 'latitude', 'longitude', 'heart_rate'])
+                               self.longitude_values()))  # self.heart_rate_values()
+        df_coords = pd.DataFrame(list_coords, columns=['time', 'latitude', 'longitude'])  # 'heart_rate'
         return df_coords
 
 
