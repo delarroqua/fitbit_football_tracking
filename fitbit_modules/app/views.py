@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import pandas as pd
 import os
 import json
 import tinys3
@@ -8,7 +7,7 @@ import boto3
 
 from fitbit_modules.app import app
 from flask import render_template, request
-from flask import flash, redirect, url_for
+from flask import flash, redirect
 from werkzeug.utils import secure_filename
 
 from ..utils.io import load_json
@@ -33,29 +32,31 @@ s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_a
 # UPLOAD_FOLDER = 'uploads/'
 
 
-def build_heatmap(coords, coords_center):
-    center_map = {"lat": coords_center['latitude'], "lng": coords_center['longitude']}
-    return render_template('heat_map_google.html', coords=json.dumps(coords), center_map=center_map,
+def build_heatmap(coords, center_map):
+    return render_template('heatmap.html', coords=json.dumps(coords), center_map=center_map,
+                           api_key=google_api_key)
+
+def build_gps(coords, center_map):
+    return render_template('gps.html', coords=json.dumps(coords), center_map=center_map,
                            api_key=google_api_key)
 
 
-@app.route('/movements')
-def redirect_to_d3():
-    df_coords = pd.read_csv('input/coords_pedro_def.csv')
-    coords = df_coords.values.tolist()
-    return render_template('movements_football_d3.html', coords=json.dumps(coords))
-
-
-@app.route('/heatmap')
-def uploaded_file():
-    filename = request.args['filename']
-    # tcx_from_s3 = s3_conn.get(os.path.join('tcx_files/', filename))
+@app.route('/choice', methods=['POST'])
+def make_choice():
+    filename = request.form['filename']
+    choice = request.form['choice']
     tcx_file_path = os.path.join('uploads/', filename)
     s3_client.download_file('pedro62360', os.path.join('tcx_files/', filename), tcx_file_path)
     df_coords = tcx_to_df(tcx_file_path)
     coords = df_coords[['latitude', 'longitude']].values.tolist()
-    coords_median = df_coords.mean(axis=0)
-    return build_heatmap(coords, coords_median)
+    coords_center = df_coords.median(axis=0)
+    center_map = {"lat": coords_center['latitude'], "lng": coords_center['longitude']}
+    if choice == 'heatmap':
+        return build_heatmap(coords, center_map)
+    elif choice == 'gps':
+        return build_gps(coords, center_map)
+    else:
+        return "Error motherfucker"
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -76,7 +77,7 @@ def upload_file():
             filename_with_date = get_datetime_string() + '_' + filename
             s3_conn.upload(os.path.join('tcx_files/', filename_with_date), file)  # Upload file to S3
             # s3_client.upload_fileobj(file, "pedro62360", os.path.join('tcx_files/', filename))
-            return redirect(url_for('uploaded_file', filename=filename_with_date))
+            return render_template('choice.html', filename=filename_with_date)
     return render_template('index.html')
 
 

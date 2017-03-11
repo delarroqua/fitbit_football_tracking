@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+    <head>
+        <title>Fitbit Football Tracking</title>
+        <link href="static/lib/bootstrap.min.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container">
+
+            <form action="/choice" method="post" id="choice-form">
+                <br><br><h4>Make a choice</h4>
+                <input type="hidden" name="filename" value={{filename}}>
+                <input type="radio" name="choice" value="heatmap">Heatmap
+                <input type="radio" name="choice" value="gps">GPS<br>
+                <input type="submit" value="Send choice">
+            </form>
+
+        </div>
+    </body>
+
+</html>

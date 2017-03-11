@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>GPS</title>
+    <link href="static/css/gps.css" rel="stylesheet">
+    <link href="static/lib/bootstrap.min.css" rel="stylesheet">
+
+    <script charset="utf-8">
+      var coords = {{ coords|safe }};
+      var center_map = {{ center_map|safe }};
+    </script>
+    <script type="text/javascript" src="static/js/gps.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=visualization&callback=initMap">
+    </script>
+    <script type="text/javascript" src="static/lib/d3.min.js"></script>
+
+  </head>
+
+  <body>
+
+    <div id="map"></div>
+
+  </body>
+</html>

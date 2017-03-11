@@ -1,4 +1,4 @@
- var map, heatmap, a;
+ var map, heatmap;
 
  function initMap() {
    map = new google.maps.Map(document.getElementById('map'), {
@@ -14,7 +14,8 @@
    heatmap = new google.maps.visualization.HeatmapLayer({
      data: coords_array,
      map: map,
-     radius: 11,
+     // radius: 11,
+     radius: 9,
      opacity: 1
    });
 
