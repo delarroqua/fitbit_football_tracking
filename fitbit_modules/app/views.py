@@ -58,7 +58,8 @@ def build_stuff():
     tcx_file_path = os.path.join('uploads/', filename)
     s3_client.download_file(BUCKET_NAME, os.path.join('tcx_files/', filename), tcx_file_path)
     df_coords = tcx_to_df(tcx_file_path)
-    coords = df_coords[['latitude', 'longitude']].values.tolist()
+    # coords = df_coords[['latitude', 'longitude']].values.tolist()
+    coords = df_coords[['latitude', 'longitude', 'time']].values.tolist()
     coords_center = df_coords.median(axis=0)
     center_map = {"lat": coords_center['latitude'], "lng": coords_center['longitude']}
     if choice == 'heatmap':

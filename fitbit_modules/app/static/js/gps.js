@@ -60,6 +60,18 @@ function initMap() {
 
     overlay.setMap(map);
 
+    var time_p = d3.select("#time-div");
+    time_p.text(coords[0][0]);
+
+    function transition_time(i_time) {
+        time_p.transition()
+        .duration(10)
+        .text(function(d) {
+            return coords[i_time][2]
+        })
+        //.on("end", transition_time);
+    }
+
     //simulate position update by receiving positions at random interval
     var d1Cnt = 1;
     (function loop() {
@@ -67,6 +79,7 @@ function initMap() {
        setTimeout(function () {
            i = d1Cnt++
            overlay.update([coords[i]]);
+           transition_time(i);
            loop();
        }, randTimeout);
     }());
