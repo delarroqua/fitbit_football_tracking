@@ -28,6 +28,8 @@ class TcxParser:
         list_coords = list(zip(self.time_values(), self.latitude_values(),
                                self.longitude_values()))  # self.heart_rate_values()
         df_coords = pd.DataFrame(list_coords, columns=['time', 'latitude', 'longitude'])  # 'heart_rate'
+        # Slice time with the format 'hh:mm:ss'
+        df_coords['time'] = df_coords.time.apply(lambda x: x[11:19])
         return df_coords
 
 

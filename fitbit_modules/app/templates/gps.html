@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>GPS</title>
-    <link href="static/css/gps.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
     <link href="static/lib/bootstrap.min.css" rel="stylesheet">
 
     <script charset="utf-8">
@@ -20,13 +20,19 @@
 
   <body>
 
-    <div class="header">
-       <a href="/choice">Go to Choice page</a>
-    </div><br><br>
+    <div class="container">
+        <div class="header">
+           <a href="/choice">Go to Choice page</a>
+        </div>
+        <h2>GPS</h2>
 
-    <div id="time-div" font-family="sans-serif" font-size="20px" fill="black"></div>
+        <!--<button class="btn btn-blue">Play</button></br></br>-->
+        <div id="wrapper">
+            <div id="time-div"></div>
+            <div id="map"></div>
+        </div>
 
-    <div id="map"></div>
+    </div>
 
   </body>
 </html>
