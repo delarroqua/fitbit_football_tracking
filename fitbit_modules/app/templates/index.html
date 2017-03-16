@@ -8,6 +8,14 @@
 
     <body>
         <div class="container">
+            <div class="header">
+                <a href="/login">Login</a>
+                <a href="/choice">Choice</a>
+            </div>
+
+            {% if current_user.is_authenticated %}
+              Hi {{ current_user.id }}!
+            {% endif %}
 
             <h1>Fitbit Football Tracking</h1><br>
             <form method="post" enctype="multipart/form-data" action="/upload">

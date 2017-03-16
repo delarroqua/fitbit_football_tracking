@@ -11,9 +11,12 @@
 
             <form action="/build" method="post" id="choice-form">
                 <br><br><h4>Make a choice</h4>
-                <input type="hidden" name="filename" value={{filename}}>
+
+                <label for="filename">Filename</label>
+                <input type="text" name="filename" id="filename" value={{filename}} readonly><br><br>
+
                 <input type="radio" name="choice" value="heatmap">Heatmap
-                <input type="radio" name="choice" value="gps">GPS<br>
+                <input type="radio" name="choice" value="gps">GPS<br><br>
                 <input type="submit" value="Send choice">
             </form>
 
