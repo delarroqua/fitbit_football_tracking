@@ -17,12 +17,10 @@ from ..utils.misc import get_datetime_string, allowed_file
 from ..utils.db_connection import PostgresConnection
 from ..utils.database import check_if_email_exists, get_password_from_email, get_filename_from_email
 
-
-# Todo: Add name of file to user
-
+# Todo: faire une page d'accueil un peu sympa est embellir le reste
+# Todo: Create new account page
 # Todo: Improve buttons to regulate opacity and radius
-# Todo: Create a session
-# Todo: Deploy on Heroku
+
 
 # Google Map Api
 config_google = load_json('config/config_google.json')
@@ -45,10 +43,6 @@ connection = PostgresConnection(config_db)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-# Our mock database.
-# users = {'pedro.delaroche@gmail.com': {'pw': 'secret'},
-#          'alain@gmail.com': {'pw': 'proviste'}}
-
 
 class User(UserMixin):
     pass
@@ -57,8 +51,11 @@ class User(UserMixin):
 @app.route('/choice')
 def make_choice():
     # filename = request.args['filename']
-    # filename = session['filename']
-    filename = get_filename_from_email(connection, email=current_user.id)
+    if session['filename']:
+        filename = session['filename']
+    else:
+        filename = get_filename_from_email(connection, email=current_user.id)
+
     if filename is None:
         return "You have to load a file first"
     return render_template('choice.html', filename=filename)
@@ -72,7 +69,6 @@ def build_stuff():
     # Download file from S3
     s3_client.download_file(BUCKET_NAME, os.path.join('tcx_files/', filename), tcx_file_path)
     df_coords = tcx_to_df(tcx_file_path)
-    # coords = df_coords[['latitude', 'longitude']].values.tolist()
     coords = df_coords[['latitude', 'longitude', 'time']].values.tolist()
     coords_center = df_coords.median(axis=0)
     center_map = {"lat": coords_center['latitude'], "lng": coords_center['longitude']}
@@ -105,16 +101,18 @@ def upload_file():
             # file.save(os.path.join(UPLOAD_FOLDER, filename))
             filename_with_date = get_datetime_string() + '_' + filename
             s3_conn.upload(os.path.join('tcx_files/', filename_with_date), file)  # Upload file to S3
-            # session['filename'] = filename_with_date
-            connection.update_filename_of_user(filename=filename_with_date, email=current_user.id)
+            if current_user.id:
+                connection.update_filename_of_user(filename=filename_with_date, email=current_user.id)
+            else:
+                session['filename'] = filename_with_date
             return redirect(url_for('make_choice'))
             # return render_template('choice.html', filename=filename_with_date)
-    return render_template('index.html')
+    return render_template('select_file.html')
 
 
 @app.route('/')
 def index():
-    # return render_template('index.html')
+    # return render_template('select_file.html')
     return render_template('login.html')
 
 
@@ -138,9 +136,8 @@ def request_loader(request):
         return
     user = User()
     user.id = email
-    # DO NOT ever store passwords in plaintext and always compare password hashes using constant-time comparison!
-    # user.is_authenticated = request.form['pw'] == users[email]['pw']
-    user.is_authenticated = request.form['pw'] == get_password_from_email(connection, email)
+    # password = request.form['pw']
+    # user.is_authenticated = password == get_password_from_email(connection, email)
     return user
 
 
@@ -165,8 +162,8 @@ def login():
 @app.route('/logged')
 @login_required
 def logged():
-    # return render_template('index.html', current_user_id=current_user.id)
-    return render_template('index.html')
+    # return render_template('select_file.html', current_user_id=current_user.id)
+    return render_template('select_file.html')
 
 
 @app.route('/logout')
