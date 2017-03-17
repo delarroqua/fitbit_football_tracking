@@ -39,5 +39,3 @@ def get_filename_from_email(connection, email):
 
     df_user = connection.query(query, config_query)
     return df_user['filename'][0]
-
-
