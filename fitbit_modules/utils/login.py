@@ -9,7 +9,7 @@ from ..utils.database import check_if_email_exists, get_password_from_email
 
 
 # PSQL connection
-config_db = load_json("config/config_db.json")
+config_db = load_json("config/config_db_local.json")
 connection = PostgresConnection(config_db)
 
 # Flask-login

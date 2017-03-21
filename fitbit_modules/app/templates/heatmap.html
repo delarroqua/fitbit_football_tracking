@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Heatmap</title>
-    <link href="static/css/style.css" rel="stylesheet">
-    <link href="static/lib/bootstrap.min.css" rel="stylesheet">
+
+  {% include 'head.html' %}
 
     <script charset="utf-8">
       var coords = {{ coords|safe }};
@@ -14,15 +11,14 @@
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=visualization&callback=initMap">
     </script>
-  </head>
+
 
   <body>
 
+    {% include 'navbar.html' %}
+
     <div class="container">
 
-      <div class="header">
-        <a href="/choice">Go to Choice page</a>
-      </div>
       <h2>Heatmap</h2>
 
       <div id="wrapper">

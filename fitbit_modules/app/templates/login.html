@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
+    <link href="static/lib/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
+
+{% include 'navbar.html' %}
 
    <form action='login' method='POST'>
     <input type='text' name='email' id='email' placeholder='email'>

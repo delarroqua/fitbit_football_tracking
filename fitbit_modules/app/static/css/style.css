@@ -1,3 +1,5 @@
+
+
 /* Optional: Makes the sample page fill the window. */
 html, body {
   width: 100%;
@@ -56,4 +58,17 @@ html, body {
     text-align: center;
     font-family: sans-serif;
     line-height: 30px;
+}
+
+
+
+.image {
+    float:left;
+    padding-left: 20px;
+    text-align: center;
+}
+
+#heatmap-image, #gps-image {
+    width:540px;
+    height:400px;
 }

@@ -15,7 +15,7 @@ from ..utils.misc import get_datetime_string, allowed_file
 from ..utils.database import get_filename_from_email
 
 
-# Todo: faire une page d'accueil un peu sympa est embellir le reste
+# Todo: faire une page d'accueil un peu sympa et embellir le reste
 # Todo: Create new account page
 # Todo: Improve buttons to regulate opacity and radius
 
@@ -61,11 +61,9 @@ def build_stuff():
     coords_center = df_coords.median(axis=0)
     center_map = {"lat": coords_center['latitude'], "lng": coords_center['longitude']}
     if choice == 'heatmap':
-        # return build_heatmap(coords, center_map)
         return render_template('heatmap.html', coords=json.dumps(coords), center_map=center_map,
                                api_key=google_api_key)
     elif choice == 'gps':
-        # return build_gps(coords, center_map)
         return render_template('gps.html', coords=json.dumps(coords), center_map=center_map,
                                api_key=google_api_key)
     else:
@@ -98,7 +96,13 @@ def upload_file():
     return render_template('select_file.html')
 
 
+@app.route('/select-file')
+def select_file():
+    return render_template('select_file.html')
+
+
 @app.route('/')
 def index():
     # return render_template('select_file.html')
-    return render_template('login.html')
+    # return render_template('login.html')
+    return render_template('index.html')
