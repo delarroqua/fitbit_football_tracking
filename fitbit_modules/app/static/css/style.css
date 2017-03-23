@@ -61,7 +61,7 @@ html, body {
 }
 
 
-
+/* Index images */
 .image {
     float:left;
     padding-left: 20px;
@@ -71,4 +71,27 @@ html, body {
 #heatmap-image, #gps-image {
     width:540px;
     height:400px;
+}
+
+
+/* Other */
+.clearfix{
+    clear:both
+}
+
+.footer {
+    padding-top: 1em;
+}
+
+
+/* Newsletter */
+
+.intro-header {
+    padding-top: 1em;
+	text-align: center;
+}
+
+.custom-tab-content{
+    color:#fff;
+    font-family: 'Open Sans', sans-serif;
 }

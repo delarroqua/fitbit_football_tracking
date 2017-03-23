@@ -15,7 +15,6 @@ from ..utils.misc import get_datetime_string, allowed_file
 from ..utils.database import get_filename_from_email
 
 
-# Todo: faire une page d'accueil un peu sympa et embellir le reste
 # Todo: Create new account page
 # Todo: Improve buttons to regulate opacity and radius
 
@@ -42,10 +41,14 @@ def make_choice():
     # if session['filename']:
     #    filename = session['filename']
     # else:
-    filename = get_filename_from_email(connection, email=current_user.id)
-
-    if filename is None:
-        return "You have to load a file first"
+    email = current_user.id
+    if check_if_email_exists(connection, email):
+        filename = get_filename_from_email(connection, email=email)
+    elif 'filename' in session:
+        filename = session['filename']
+    else:
+        filename = 'No_file_loaded'
+    #if filename is None:
     return render_template('choice.html', filename=filename)
 
 
@@ -53,6 +56,10 @@ def make_choice():
 def build_stuff():
     filename = request.form['filename']
     choice = request.form['choice']
+
+    if filename == 'No_file_loaded':
+        return render_template('select_file.html')
+
     tcx_file_path = os.path.join('uploads/', filename)
     # Download file from S3
     s3_client.download_file(BUCKET_NAME, os.path.join('tcx_files/', filename), tcx_file_path)
@@ -87,10 +94,10 @@ def upload_file():
             # file.save(os.path.join(UPLOAD_FOLDER, filename))
             filename_with_date = get_datetime_string() + '_' + filename
             s3_conn.upload(os.path.join('tcx_files/', filename_with_date), file)  # Upload file to S3
-            # if current_user.id:
-            connection.update_filename_of_user(filename=filename_with_date, email=current_user.id)
-            # else:
-            #    session['filename'] = filename_with_date
+            if current_user.id:
+                connection.update_filename_of_user(filename=filename_with_date, email=current_user.id)
+            else:
+                session['filename'] = filename_with_date
             return redirect(url_for('make_choice'))
             # return render_template('choice.html', filename=filename_with_date)
     return render_template('select_file.html')

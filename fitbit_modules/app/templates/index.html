@@ -9,6 +9,7 @@
         <div class="container">
 
         {% include 'display_user.html' %}
+
             <h2>Football Tracking</h2><br>
 
             <div class="image">
@@ -20,7 +21,16 @@
                 <h2>GPS</h2>
                 <img id='gps-image' src="static/img/gps.png" alt="GPS">
             </div>
+
+            <div class="clearfix"></div>
+
+            {% include 'newsletter.html' %}
+
+            {% include 'footer.html' %}
+
         </div>
+
+
 
     </body>
 </html>

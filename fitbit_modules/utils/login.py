@@ -74,4 +74,5 @@ def logged():
 @app.route('/logout')
 def logout():
     logout_user()
-    return 'Logged out'
+    return render_template('index.html')
+    # return 'Logged out'
