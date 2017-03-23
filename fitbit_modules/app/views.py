@@ -5,19 +5,24 @@ import json
 import tinys3
 import boto3
 
-from ..utils.login import *
-
+# from ..utils.login import *
+from fitbit_modules.app import app
+from flask import render_template, request
+from flask import redirect, url_for
 from flask import flash, session
 from werkzeug.utils import secure_filename
 
 from ..utils.tcx_parser import tcx_to_df
 from ..utils.misc import get_datetime_string, allowed_file
-from ..utils.database import get_filename_from_email
-
+from ..utils.io import load_json
+from ..utils.db_connection import PostgresConnection
 
 # Todo: Create new account page
 # Todo: Improve buttons to regulate opacity and radius
 
+# PSQL connection
+config_db = load_json("config/config_db.json")
+connection = PostgresConnection(config_db)
 
 # Google Map Api
 config_google = load_json('config/config_google.json')
@@ -34,21 +39,20 @@ s3_client = boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_a
 # UPLOAD_FOLDER = 'uploads/'
 
 
-
 @app.route('/choice')
 def make_choice():
     # filename = request.args['filename']
     # if session['filename']:
     #    filename = session['filename']
     # else:
-    email = current_user.id
-    if check_if_email_exists(connection, email):
-        filename = get_filename_from_email(connection, email=email)
-    elif 'filename' in session:
+    # email = current_user.id
+    # if check_if_email_exists(connection, email):
+    #    filename = get_filename_from_email(connection, email=email)
+    if 'filename' in session:
         filename = session['filename']
     else:
         filename = 'No_file_loaded'
-    #if filename is None:
+    # if filename is None:
     return render_template('choice.html', filename=filename)
 
 
@@ -94,10 +98,9 @@ def upload_file():
             # file.save(os.path.join(UPLOAD_FOLDER, filename))
             filename_with_date = get_datetime_string() + '_' + filename
             s3_conn.upload(os.path.join('tcx_files/', filename_with_date), file)  # Upload file to S3
-            if current_user.id:
-                connection.update_filename_of_user(filename=filename_with_date, email=current_user.id)
-            else:
-                session['filename'] = filename_with_date
+            # if current_user.id:
+            #    connection.update_filename_of_user(filename=filename_with_date, email=current_user.id)
+            session['filename'] = filename_with_date
             return redirect(url_for('make_choice'))
             # return render_template('choice.html', filename=filename_with_date)
     return render_template('select_file.html')
@@ -106,6 +109,17 @@ def upload_file():
 @app.route('/select-file')
 def select_file():
     return render_template('select_file.html')
+
+
+@app.route('/mail', methods=['POST'])
+def insert_mail():
+    if request.method == 'POST':
+        email = request.form['email']
+        connection.add_mail_to_list(email)
+        return """
+        <p> Thanks for your support ! <p>
+        <a href="/"> Back to the home page</a>
+        """
 
 
 @app.route('/')

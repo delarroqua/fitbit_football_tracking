@@ -31,3 +31,10 @@ class PostgresConnection:
             (filename, email)
         )
         self.db.con.commit()
+
+    def add_mail_to_list(self, email):
+        self.db.cur.execute(
+            "insert into fitbit.mails (email, datetime) values (%s, %s)",
+            (email, datetime.now())
+        )
+        self.db.con.commit()

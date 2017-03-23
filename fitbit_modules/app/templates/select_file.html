@@ -9,13 +9,17 @@
 
         <div class="container">
 
-            {% include 'display_user.html' %}
+            <h2>Select a file</h2>
+            <h4>As of now, it only works with .TCX file</h4><br>
 
-            <h2>Select a file</h2><br>
             <form method="post" enctype="multipart/form-data" action="/upload">
                 <input type="file" name="file"><br>
                 <input type="submit" value="Envoyer fichier" class="btn btn-success">
             </form>
+
+            <br>
+            <a href = 'http://www.gpsies.com/convert.do'>Click here if you want to convert your .FIT file to .TCX</a><br>
+
         </div>
     </body>
 
