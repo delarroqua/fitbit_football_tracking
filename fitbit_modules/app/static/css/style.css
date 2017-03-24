@@ -73,6 +73,10 @@ html, body {
     height:400px;
 }
 
+#fitbit-image, #garmin-image {
+    width:250px;
+    height:200px;
+}
 
 /* Other */
 .clearfix{

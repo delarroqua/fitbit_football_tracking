@@ -13,12 +13,24 @@
 
             <form action="/build" method="post" id="choice-form">
 
-                <label for="filename"><h4>File to analyse</h4></label>
-                <input type="text" name="filename" id="filename" value={{filename}} readonly><br><br>
+                <label for="filename"><h4>File to process &nbsp;&nbsp;</h4></label>
+                <input type="text" name="filename" id="filename" value={{filename}} size="30" readonly><br>
 
-                <input type="radio" name="choice" value="heatmap">Heatmap
-                <input type="radio" name="choice" value="gps">GPS<br><br>
-                <input type="submit" value="Send choice" class="btn btn-success">
+                <label for="filename"><h4>Type of analysis</h4></label>
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" name="choice" value="heatmap" class="form-check-input" checked> Heatmap
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <label class="form-check-label">
+                        <input type="radio" name="choice" value="gps" class="form-check-input"> GPS
+                    </label>
+                </div>
+
+                <br>
+                <input type="submit" value="Create analysis" class="btn btn-primary">
             </form>
         </div>
 

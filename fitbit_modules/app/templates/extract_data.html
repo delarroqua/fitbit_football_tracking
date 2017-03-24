@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+    {% include 'head.html' %}
+
+    <body>
+
+    {% include 'navbar.html' %}
+
+        <div class="container">
+
+            <h2>How to export your data</h2>
+            <h4>Click on the brand of your watch to be redirected to the right page</h4><br>
+
+            <div class="image">
+                <h2>Fitbit</h2>
+                <a href="https://help.fitbit.com/articles/en_US/Help_article/1133">
+                    <img id='fitbit-image' src="static/img/fitbit.png" alt="Fitbit">
+                </a>
+            </div>
+
+            <div class="image">
+                <h2>Garmin</h2>
+                <a href="https://connect.garmin.com/features/export">
+                    <img id='garmin-image' src="static/img/garmin.jpg" alt="Garmin">
+                </a>
+            </div>
+
+            <div class="clearfix"></div>
+
+            {% include 'footer.html' %}
+
+        </div>
+    </body>
+
+</html>

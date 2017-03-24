@@ -4,6 +4,7 @@ import os
 import json
 import tinys3
 import boto3
+from validate_email import validate_email
 
 # from ..utils.login import *
 from fitbit_modules.app import app
@@ -111,19 +112,29 @@ def select_file():
     return render_template('select_file.html')
 
 
+@app.route('/data')
+def extract_data():
+    return render_template('extract_data.html')
+
+
 @app.route('/mail', methods=['POST'])
 def insert_mail():
     if request.method == 'POST':
         email = request.form['email']
-        connection.add_mail_to_list(email)
-        return """
-        <p> Thanks for your support ! <p>
-        <a href="/"> Back to the home page</a>
-        """
+        is_valid = validate_email(email)
+        if is_valid:
+            connection.add_mail_to_list(email)
+            return """
+            <p> Thanks for your support ! <p>
+            <a href="/"> Back to the home page</a>
+            """
+        else:
+            return """
+            <p> Your mail is not valid, try another one ! <p>
+            <a href="/"> Back to the home page</a>
+            """
 
 
 @app.route('/')
 def index():
-    # return render_template('select_file.html')
-    # return render_template('login.html')
     return render_template('index.html')
